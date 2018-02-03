@@ -4,10 +4,9 @@
 #include <sys/time.h>
 
 #define MEM_DIM 64
-#define RADIO 3
+#define RADIO 1
 #define SIZE_BLOQUE 8
 #define SIZE_GRID 8
-#define RADIO 3
 
 
 /*Programar una funcion que haga la media de numeros end GPU sin memoria compartida, en GPU con memoria compartida
@@ -29,13 +28,6 @@ __global__ void kernel_Shared(int *d_input, int *d_output)
 	if (threadIdx.x >= (SIZE_BLOQUE - RADIO))
 		arrayValores[threadIdx.x + RADIO] = 0;
 
-/*
-	//En esta posicion los valores de arrayValores son correctos - Inicializados a 0
-	for(int i = 0; i < blockDim.x + RADIO + RADIO; ++i)
-	{
-		printf("Valor deberia ser 0: %d\n", arrayValores[i]);
-	}
-*/
 
 	// Sincronizar todos los threads - Se puede omitir?
 	__syncthreads();
@@ -43,30 +35,8 @@ __global__ void kernel_Shared(int *d_input, int *d_output)
 	//Copiar los valores desde la memoria global a la memoria compartida
 	arrayValores[threadIdx.x + RADIO] = d_input[blockIdx.x * blockDim.x + threadIdx.x];
 
-	// 
-	/*if (threadIdx.x == 0)
-	{
-		for(int i = 0; i < blockDim.x + RADIO + RADIO; ++i)
-		{
-			printf("Valor deberia ser 0: %d\n", arrayValores[i]);
-		}
-	}*/
 
-	
-	//d_output[blockIdx.x * blockDim.x + threadIdx.x];
-	
-
-
-	/*if (threadIdx.x == 0)
-	{
-		for(int i = 0; i < MEM_DIM + RADIO + RADIO; ++i)
-			printf(" %d", arrayValores[i]);
-	}
-	printf("\n");*/
-
-	
-
-	//Copiar los valores extras
+	//Copiar los valores extras de la izquierda
 	if (threadIdx.x < RADIO)
 	{
 		if (blockIdx.x > 0)
@@ -76,7 +46,7 @@ __global__ void kernel_Shared(int *d_input, int *d_output)
 	}
 
 	
-
+	//Copiar los valores extras de la derecha
 	if (threadIdx.x >= (SIZE_BLOQUE - RADIO))
 	{
 		 if (blockIdx.x < SIZE_GRID - 1)
@@ -86,6 +56,7 @@ __global__ void kernel_Shared(int *d_input, int *d_output)
 	}
 
 
+/*
 	if (threadIdx.x == 0)
 	{
 		for(int i = 0; i < blockDim.x + RADIO + RADIO; ++i)
@@ -94,7 +65,7 @@ __global__ void kernel_Shared(int *d_input, int *d_output)
 		}
 		printf("%d\n\n", blockIdx.x * blockDim.x + threadIdx.x);
 	}
-
+*/
 
 
 	//Sincronizar los threads
@@ -105,14 +76,24 @@ __global__ void kernel_Shared(int *d_input, int *d_output)
 	{
 		valorFinal += arrayValores[(threadIdx.x + RADIO) + i];
 	}
-
 	valorFinal /= (RADIO + RADIO + 1);
 
-	printf("Valor en el thread actual (%d, %d): %d\n", blockIdx.x, threadIdx.x, valorFinal);
+
+	//printf("Valor en el thread actual (%d, %d): %d\n", blockIdx.x, threadIdx.x, valorFinal);
 
 	d_output[blockIdx.x * blockDim.x + threadIdx.x] = valorFinal;
 
-printf("Bloque: %d -> Thread: %d -> PosicionArray: %d -> Posicion Array Global: %d -> Valor Guardado: %d\n", blockIdx.x, threadIdx.x, threadIdx.x + RADIO, blockIdx.x * blockDim.x + threadIdx.x, arrayValores[threadIdx.x + RADIO]);
+//printf("Bloque: %d -> Thread: %d -> PosicionArray: %d -> Posicion Array Global: %d -> Valor Guardado: %d\n", blockIdx.x, threadIdx.x, threadIdx.x + RADIO, blockIdx.x * blockDim.x + threadIdx.x, arrayValores[threadIdx.x + RADIO]);
+
+}
+
+__global__ void kernel(int *d_input, int *d_output)
+{
+	int i;
+	int valorFinal = 0;
+
+	int valores[RADIO + RADIO + 1] = {0};
+		
 
 }
 

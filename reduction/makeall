@@ -1,0 +1,10 @@
+#!/bin/bash
+for i in $*
+do
+echo make tgt=$i
+make tgt=$i
+echo make tgt=$i dbg=1
+make tgt=$i dbg=1
+echo make tgt=$i dbg=1 emu=1
+make tgt=$i dbg=1 emu=1
+done
