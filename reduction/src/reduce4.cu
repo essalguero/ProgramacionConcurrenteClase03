@@ -132,15 +132,18 @@ __global__ void reduce_kernel(const int* valuesIn, unsigned int numValues,
         // Index into sresult where the thread will write during this loop
         // iteration
         //int index = 0 /* TODO */;
-	int index = threadID;
+	int index = threadID * stride * 2 ;
         
         // Check if thread is active during this loop iteration
         //if (index < 0 /* TODO */)
-	if (index < (numThreadsPerBlock / (2 * stride)))
+	if (index < numThreadsPerBlock)
         
             // Accumulate one element from sresult into another
             //sresult[index] += sresult[0 /* TODO */];
-	    sresult[index] += sresult[index + (numThreadsPerBlock / (2 * stride))];
+	    //sresult[index] += sresult[index + (numThreadsPerBlock / (2 * stride))];
+	    sresult[index] += sresult[index + stride];
+	
+
     }
     
     // Thread 0 of each block writes the final result of the reduction to
