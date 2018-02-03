@@ -61,29 +61,33 @@
 // so that bank conflicts do not occur when threads address the array column-wise.
 __global__ void transpose(float *odata, float *idata, int width, int height)
 {
-	__shared__ float block[BLOCK_DIM][BLOCK_DIM+1];
+	//__shared__ float block[BLOCK_DIM][BLOCK_DIM+1];
+	__shared__ float block[BLOCK_DIM][BLOCK_DIM];
 	
 	// read the matrix tile into shared memory
         // load one element per thread from device memory (idata) and store it
         // in transposed order in block[][]
-	unsigned int xIndex = 
-	unsigned int yIndex = 
+	unsigned int xIndex = blockDim.x * blockIdx.x + threadIdx.x;
+	unsigned int yIndex = blockDim.y * blockIdx.y + threadIdx.y;
 	if((xIndex < width) && (yIndex < height))
 	{
-
+		unsigned int index_in = width * yIndex + xIndex;
+		block[threadIdx.y][threadIdx.x] = idata[index_in];
 
 	}
 
         // synchronise to ensure all writes to block[][] have completed
-        ???
+        __syncthreads();
 
 	// write the transposed matrix tile to global memory (odata) in linear order
-	xIndex = 
-	yIndex = 
+	xIndex = blockDim.x * blockIdx.x + threadIdx.y;
+	yIndex = blockDim.y * blockIdx.y + threadIdx.x;
+
 	if((xIndex < height) && (yIndex < width))
 	{
+		unsigned int index_out = height * xIndex + yIndex;
 
-
+		odata[index_out] = block[threadIdx.x][threadIdx.y];
 	}
 }
 
@@ -92,7 +96,17 @@ __global__ void transpose(float *odata, float *idata, int width, int height)
 // It can be up to 10x slower than the kernel above for large matrices.
 __global__ void transpose_naive(float *odata, float* idata, int width, int height)
 {
+	unsigned int  IDXx = blockDim.x * blockIdx.x + threadIdx.x;
+	unsigned int  IDXy = blockDim.y * blockIdx.y + threadIdx.y;
 
+
+	if ((IDXx < width) && (IDXy < height))
+	{
+		unsigned int index_in = width * IDXy + IDXx;
+		unsigned int index_out = height * IDXx + IDXy;
+		
+		odata[index_out] = idata[index_in];
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
