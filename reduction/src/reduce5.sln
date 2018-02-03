@@ -1,0 +1,25 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "reduce5", "reduce5.vcproj", "{54D06C9D-5E41-4EF1-A75A-ED94A1A8D906}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		EmuDebug|Win32 = EmuDebug|Win32
+		EmuRelease|Win32 = EmuRelease|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{54D06C9D-5E41-4EF1-A75A-ED94A1A8D906}.Debug|Win32.ActiveCfg = Debug|Win32
+		{54D06C9D-5E41-4EF1-A75A-ED94A1A8D906}.Debug|Win32.Build.0 = Debug|Win32
+		{54D06C9D-5E41-4EF1-A75A-ED94A1A8D906}.EmuDebug|Win32.ActiveCfg = EmuDebug|Win32
+		{54D06C9D-5E41-4EF1-A75A-ED94A1A8D906}.EmuDebug|Win32.Build.0 = EmuDebug|Win32
+		{54D06C9D-5E41-4EF1-A75A-ED94A1A8D906}.EmuRelease|Win32.ActiveCfg = EmuRelease|Win32
+		{54D06C9D-5E41-4EF1-A75A-ED94A1A8D906}.EmuRelease|Win32.Build.0 = EmuRelease|Win32
+		{54D06C9D-5E41-4EF1-A75A-ED94A1A8D906}.Release|Win32.ActiveCfg = Release|Win32
+		{54D06C9D-5E41-4EF1-A75A-ED94A1A8D906}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
